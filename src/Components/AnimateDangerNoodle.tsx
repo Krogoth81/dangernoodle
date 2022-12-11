@@ -1,3 +1,4 @@
+import {ArrowBackIcon, RepeatIcon} from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -19,7 +20,7 @@ export const AnimateDangerNoodle = ({input, onExit}: Props) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
   const requestIdRef = React.useRef<number>(0)
   const [done, setDone] = React.useState(false)
-  const [fps, setFps] = React.useState(30)
+  const [fps, setFps] = React.useState(60)
   const [ctx, setCtx] = React.useState<CanvasRenderingContext2D | null>(null)
   const lastRef = React.useRef(new Date().getTime())
   const tickRef = React.useRef(0)
@@ -89,34 +90,33 @@ export const AnimateDangerNoodle = ({input, onExit}: Props) => {
   }, [canvasRef.current, fps])
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" rowGap={5}>
+    <Box height="100%" display="flex" flexDirection="column" alignItems="center" rowGap={5}>
       <Box
         background="black"
         display="flex"
         flexDirection="column"
         alignItems="center"
-        width={800}
-        height={800}
+        height="100%"
       >
         <canvas
           ref={canvasRef}
           width={input.width}
           height={input.height}
-          style={{width: '100%', height: '100%'}}
+          style={{height: '100%', maxWidth: '100%'}}
         />
       </Box>
       <Text alignSelf="center">FPS: {fps}</Text>
-      <Slider min={1} max={255} value={fps} onChange={(nr) => setFps(nr)}>
+      <Slider maxWidth={250} min={1} max={255} value={fps} onChange={(nr) => setFps(nr)}>
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
         <SliderThumb />
       </Slider>
       <Box display="flex" columnGap={10}>
-        <Button colorScheme="teal" onClick={onExit}>
+        <Button leftIcon={<ArrowBackIcon />} colorScheme="blackAlpha" onClick={onExit}>
           Back
         </Button>
-        <Button colorScheme="purple" onClick={restart}>
+        <Button colorScheme="blue" leftIcon={<RepeatIcon />} onClick={restart}>
           Restart
         </Button>
       </Box>

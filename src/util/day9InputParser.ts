@@ -1,8 +1,14 @@
 import {Dir, Knot} from '../types'
 
-export const parseDay9Input = (input: string, amountOfKnots = 10) => {
+export interface InputParseProps {
+  input: string
+  behaviour: 'SNAKE' | 'ROPE'
+  knots: number
+}
+
+export const parseDay9Input = ({input, knots, behaviour}: InputParseProps) => {
   const data = input.split('\n').filter((txt) => !!txt)
-  let tails: Array<Knot> = Array.from({length: amountOfKnots}, () => ({x: 0, y: 0}))
+  let tails: Array<Knot> = Array.from({length: knots}, () => ({x: 0, y: 0}))
 
   const steps: Array<Array<Knot>> = []
 
@@ -36,18 +42,6 @@ export const parseDay9Input = (input: string, amountOfKnots = 10) => {
         head.x++
       } else {
         head.x--
-      }
-      if (head.x < minX) {
-        minX = head.x
-      }
-      if (head.x > maxX) {
-        maxX = head.x
-      }
-      if (head.y < minY) {
-        minY = head.y
-      }
-      if (head.y > maxY) {
-        maxY = head.y
       }
 
       for (let i = 1; i < tails.length; i++) {
@@ -110,6 +104,19 @@ export const parseDay9Input = (input: string, amountOfKnots = 10) => {
   for (const line of data) {
     const [dir, amt] = line.split(' ')
     move(dir as Dir, Number(amt))
+  }
+  if (behaviour === 'SNAKE') {
+    for (let i = 0; i < steps.length; i++) {
+      if (i !== 0) {
+        const prevStep = steps[i - 1]
+        const step = steps[i]
+        for (let j = 0; j < step.length; j++) {
+          if (j !== 0) {
+            step[j] = prevStep[j - 1]
+          }
+        }
+      }
+    }
   }
 
   return {width, height, steps}
